@@ -19,3 +19,36 @@ Cyrus imapd is also configured to auto create mailboxes on receiving email via p
 ## Health check
 
 The dockerfile is configured with a health check that checks that both cyrus and postfix are running and listening on their ports.  This can be useful for services such as Github actions to ensure that the service is fully ready.
+
+## GitHub Action
+
+Example usage in GitHub actions:
+
+```yaml
+name: Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run tests
+        run: |
+          # run tests here
+
+    services:
+      mail_server:
+        image: ghcr.io/deltachat/mail-server-tester:release
+        ports:
+          - 3025:25
+          - 3143:143
+          - 3465:465
+          - 3993:993
+```
